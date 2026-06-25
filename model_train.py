@@ -1,19 +1,46 @@
 import numpy as np
-from sklearn.linear_model import LinearRegression
 import joblib
+from sklearn.ensemble import RandomForestRegressor
 
-X = np.array([
-    [10, 1, 2, 50, 0, 2.0, 5.0],
-    [12, 2, 3, 60, 1, 2.5, 6.0],
-    [18, 3, 2, 70, 1, 3.0, 7.0],
-    [20, 4, 4, 80, 0, 3.5, 8.0],
-])
+np.random.seed(42)
 
-y = np.array([15, 18, 22, 28])
+X = []
+y = []
 
-model = LinearRegression()
-model.fit(X, y)
+for i in range(200):
+    order_hour = np.random.randint(8, 22)
+    weekday = np.random.randint(0, 6)
+    sku_complexity = np.random.randint(1, 5)
+    warehouse_load = np.random.randint(30, 100)
+    express = np.random.randint(0, 2)
+    pick_time = np.random.uniform(1, 5)
+    shipping_time = np.random.uniform(5, 20)
+
+    delivery_time = (
+        10
+        + warehouse_load * 0.1
+        + sku_complexity * 1.5
+        + express * (-3)
+        + pick_time * 2
+        + shipping_time * 0.5
+        + np.random.normal(0, 2)
+    )
+
+    X.append([
+        order_hour,
+        weekday,
+        sku_complexity,
+        warehouse_load,
+        express,
+        pick_time,
+        shipping_time
+    ])
+
+    y.append(delivery_time)
+
+model = RandomForestRegressor(n_estimators=100)
+model.fit(np.array(X), np.array(y))
 
 joblib.dump(model, "model.pkl")
 
-print("Model trained and saved")
+print("Better model trained")
