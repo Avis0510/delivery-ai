@@ -9,6 +9,9 @@ model = joblib.load("model.pkl")
 
 app = FastAPI()
 
+shops = {}
+api_keys = {}
+
 # DB
 conn = sqlite3.connect("saas.db", check_same_thread=False)
 cursor = conn.cursor()
