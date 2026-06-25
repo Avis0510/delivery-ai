@@ -7,13 +7,12 @@ import numpy as np
 
 import os
 
-MODEL_PATH = os.path.join(os.path.dirname(_file_), "model.pkl")
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "model.pkl")
 model = joblib.load(MODEL_PATH)
 
 app = FastAPI()
 
 shops = {}
-api_keys = {}
 
 # DB
 conn = sqlite3.connect("saas.db", check_same_thread=False)
@@ -60,8 +59,7 @@ def register_shop():
 @app.post("/predict")
 def predict(data: dict, x_api_key: str = Header(None)):
 
-    if x_api_key not in api_keys:
-        raise HTTPException(status_code=401, detail="Invalid API Key")
+shop_id = get_shop(x_api_key)
 
     shop_id = api_keys[x_api_key]
 
