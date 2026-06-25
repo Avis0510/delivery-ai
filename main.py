@@ -80,21 +80,14 @@ def predict(data: dict, x_api_key: str = Header(..., alias="x-api-key")):
         data["shipping_time"]
     ]])
 
-    prediction = model.predict(features)[0]time = float(prediction)
-
-return {
-    "shop": shop_id,
-    "prediction": {
-        "delivery_time_hours": round(time, 2),
-        "unit": "hours",
-        "risk_level": "high" if time > 25 else "normal"
-    }
-}
-@app.get("/dashboard")
-def dashboard():
-    cursor.execute("SELECT COUNT(*) FROM shops")
-    shop_count = cursor.fetchone()[0]
+    prediction = model.predict(features)[0]
+    time = float(prediction)
 
     return {
-        "total_shops": shop_count
+        "shop": shop_id,
+        "prediction": {
+            "delivery_time_hours": round(time, 2),
+            "unit": "hours",
+            "risk_level": "high" if time > 25 else "normal"
+        }
     }
