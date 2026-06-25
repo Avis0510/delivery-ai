@@ -35,7 +35,7 @@ def get_shop(api_key: str):
 
     cursor.execute(
         "SELECT shop_id FROM shops WHERE api_key=?",
-        (api_key,)
+        (api_key.strip(),)
     )
     result = cursor.fetchone()
 
