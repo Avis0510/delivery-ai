@@ -28,13 +28,13 @@ conn.commit()
 
 # Auth
 def get_shop(api_key: str):
-   [15:01, 25.6.2026] AZ: def get_shop(api_key: str):
-    print("RAW KEY:", repr(api_key))
+    print("INCOMING KEY:", repr(api_key))
 
-    cursor.execute("SELECT shop_id, api_key FROM shops")
-    print("DB CONTENT:", cursor.fetchall())
+    cursor.execute("SELECT * FROM shops")
+    rows = cursor.fetchall()
+    print("DB CONTENT:", rows)
 
-    cursor.execute("SELECT shop_id FROM shops WHERE api_key=?", (api_key.strip(),))
+    cursor.execute("SELECT shop_id FROM shops WHERE api_key=?", (api_key,))
     result = cursor.fetchone()
 
     print("RESULT:", result)
