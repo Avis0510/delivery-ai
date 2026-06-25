@@ -11,7 +11,7 @@ model = joblib.load(MODEL_PATH)
 app = FastAPI()
 
 # DB (SAUBER)
-BASE_DIR = os.path.dirname(os.path.abspath(_file_))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "saas.db")
 
 conn = sqlite3.connect(DB_PATH, check_same_thread=False)
