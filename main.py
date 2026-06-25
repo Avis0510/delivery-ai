@@ -27,16 +27,24 @@ conn.commit()
 
 # AUTH
 def get_shop(api_key: str):
-    api_key = api_key.strip()
+    print("INCOMING:", api_key)
 
-    cursor.execute("SELECT shop_id FROM shops WHERE api_key=?", (api_key,))
+    cursor.execute("SELECT * FROM shops")
+    rows = cursor.fetchall()
+    print("DB CONTENT:", rows)
+
+    cursor.execute(
+        "SELECT shop_id FROM shops WHERE api_key=?",
+        (api_key,)
+    )
     result = cursor.fetchone()
+
+    print("RESULT:", result)
 
     if not result:
         raise HTTPException(status_code=401, detail="Invalid API Key")
 
     return result[0]
-
 # ROOT
 @app.get("/")
 def root():
