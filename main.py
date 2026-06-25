@@ -1,23 +1,19 @@
 from fastapi import FastAPI, Header, HTTPException
 import sqlite3
 import uuid
-
 import joblib
 import numpy as np
-
 import os
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "model.pkl")
+MODEL_PATH = os.path.join(os.path.dirname(_file_), "model.pkl")
 model = joblib.load(MODEL_PATH)
 
 app = FastAPI()
 
-shops = {}
+# DB (SAUBER)
+BASE_DIR = os.path.dirname(os.path.abspath(_file_))
+DB_PATH = os.path.join(BASE_DIR, "saas.db")
 
-# DB
-import os
-
-DB_PATH = os.path.join(os.getcwd(), "saas.db")
 conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 cursor = conn.cursor()
 
@@ -29,46 +25,24 @@ CREATE TABLE IF NOT EXISTS shops (
 """)
 conn.commit()
 
-# Auth
+# AUTH
 def get_shop(api_key: str):
-    print("INCOMING KEY:", repr(api_key))
-
-    cursor.execute("SELECT * FROM shops")
-    rows = cursor.fetchall()
-    print("DB CONTENT:", rows)
+    api_key = api_key.strip()
 
     cursor.execute("SELECT shop_id FROM shops WHERE api_key=?", (api_key,))
     result = cursor.fetchone()
 
-    print("RESULT:", result)
-
     if not result:
         raise HTTPException(status_code=401, detail="Invalid API Key")
 
     return result[0]
 
-AZ: def get_shop(api_key: str):
-    print("RAW KEY:", repr(api_key))
-
-    cursor.execute("SELECT shop_id, api_key FROM shops")
-    print("DB CONTENT:", cursor.fetchall())
-
-    cursor.execute("SELECT shop_id FROM shops WHERE api_key=?", (api_key.strip(),))
-    result = cursor.fetchone()
-
-    print("RESULT:", result)
-
-    if not result:
-        raise HTTPException(status_code=401, detail="Invalid API Key")
-
-    return result[0]
-
-# Root
+# ROOT
 @app.get("/")
 def root():
-    return {"status": "Phase 4 running"}
+    return {"status": "running"}
 
-# Shop erstellen
+# REGISTER
 @app.post("/register_shop")
 def register_shop():
     shop_id = str(uuid.uuid4())
@@ -82,7 +56,7 @@ def register_shop():
         "api_key": api_key
     }
 
-# Predict
+# PREDICT
 @app.post("/predict")
 def predict(data: dict, x_api_key: str = Header(..., alias="x-api-key")):
 
