@@ -59,9 +59,7 @@ def register_shop():
 @app.post("/predict")
 def predict(data: dict, x_api_key: str = Header(..., alias="x-api-key")):
 
-shop_id = get_shop(x_api_key)
-
-    shop_id = api_keys[x_api_key]
+    shop_id = get_shop(x_api_key)
 
     features = np.array([[
         data["order_hour"],
@@ -78,4 +76,5 @@ shop_id = get_shop(x_api_key)
     return {
         "shop": shop_id,
         "predicted_delivery_time": float(prediction)
+    }
     }
