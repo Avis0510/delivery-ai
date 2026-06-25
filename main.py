@@ -91,3 +91,11 @@ def predict(data: dict, x_api_key: str = Header(..., alias="x-api-key")):
             "risk_level": "high" if time > 25 else "normal"
         }
     }
+@app.get("/dashboard")
+def dashboard():
+    cursor.execute("SELECT COUNT(*) FROM shops")
+    shop_count = cursor.fetchone()[0]
+
+    return {
+        "total_shops": shop_count
+    }
