@@ -47,7 +47,7 @@ def get_shop(api_key: str):
 
     return result[0]
 
-[15:01, 25.6.2026] AZ: def get_shop(api_key: str):
+AZ: def get_shop(api_key: str):
     print("RAW KEY:", repr(api_key))
 
     cursor.execute("SELECT shop_id, api_key FROM shops")
