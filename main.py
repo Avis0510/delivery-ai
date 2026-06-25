@@ -2,6 +2,11 @@ from fastapi import FastAPI, Header, HTTPException
 import sqlite3
 import uuid
 
+import joblib
+import numpy as np
+
+model = joblib.load("model.pkl")
+
 app = FastAPI()
 
 # DB
@@ -47,21 +52,26 @@ def register_shop():
 
 # Predict
 @app.post("/predict")
-def predict(data: dict, x_api_key: str = Header(...)):
+def predict(data: dict, x_api_key: str = Header(None)):
 
-    shop_id = get_shop(x_api_key)
+    if x_api_key not in api_keys:
+        raise HTTPException(status_code=401, detail="Invalid API Key")
 
-    score = (
-        data["warehouse_load"] * 0.05 +
-        data["sku_complexity"] * 1.8 +
-        data["pick_time"] * 2.0 +
-        data["shipping_time"] * 1.1 +
-        (-2 if data["express"] == 1 else 0)
-    )
+    shop_id = api_keys[x_api_key]
+
+    features = np.array([[
+        data["order_hour"],
+        data["weekday"],
+        data["sku_complexity"],
+        data["warehouse_load"],
+        data["express"],
+        data["pick_time"],
+        data["shipping_time"]
+    ]])
+
+    prediction = model.predict(features)[0]
 
     return {
         "shop": shop_id,
-        "p10": round(score * 0.9, 2),
-        "p50": round(score, 2),
-        "p90": round(score * 1.2, 2)
+        "predicted_delivery_time": float(prediction)
     }
