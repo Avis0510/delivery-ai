@@ -57,7 +57,7 @@ def register_shop():
 
 # Predict
 @app.post("/predict")
-def predict(data: dict, x_api_key: str = Header(None)):
+def predict(data: dict, x_api_key: str = Header(..., alias="x-api-key")):
 
 shop_id = get_shop(x_api_key)
 
