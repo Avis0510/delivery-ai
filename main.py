@@ -80,9 +80,13 @@ def predict(data: dict, x_api_key: str = Header(..., alias="x-api-key")):
         data["shipping_time"]
     ]])
 
-    prediction = model.predict(features)[0]
+    prediction = model.predict(features)[0]time = float(prediction)
 
-    return {
-        "shop": shop_id,
-        "predicted_delivery_time": float(prediction)
+return {
+    "shop": shop_id,
+    "prediction": {
+        "delivery_time_hours": round(time, 2),
+        "unit": "hours",
+        "risk_level": "high" if time > 25 else "normal"
     }
+}
