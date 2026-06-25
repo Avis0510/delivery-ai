@@ -5,7 +5,7 @@ import joblib
 import numpy as np
 import os
 
-MODEL_PATH = os.path.join(os.path.dirname(_file_), "model.pkl")
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "model.pkl")
 model = joblib.load(MODEL_PATH)
 
 app = FastAPI()
