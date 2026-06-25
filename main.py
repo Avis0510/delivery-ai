@@ -101,4 +101,3 @@ def predict(data: dict, x_api_key: str = Header(..., alias="x-api-key")):
         "shop": shop_id,
         "predicted_delivery_time": float(prediction)
     }
-    }
