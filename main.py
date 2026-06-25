@@ -28,8 +28,32 @@ conn.commit()
 
 # Auth
 def get_shop(api_key: str):
-    cursor.execute("SELECT shop_id FROM shops WHERE api_key=?", (api_key,))
+   [15:01, 25.6.2026] AZ: def get_shop(api_key: str):
+    print("RAW KEY:", repr(api_key))
+
+    cursor.execute("SELECT shop_id, api_key FROM shops")
+    print("DB CONTENT:", cursor.fetchall())
+
+    cursor.execute("SELECT shop_id FROM shops WHERE api_key=?", (api_key.strip(),))
     result = cursor.fetchone()
+
+    print("RESULT:", result)
+
+    if not result:
+        raise HTTPException(status_code=401, detail="Invalid API Key")
+
+    return result[0]
+
+[15:01, 25.6.2026] AZ: def get_shop(api_key: str):
+    print("RAW KEY:", repr(api_key))
+
+    cursor.execute("SELECT shop_id, api_key FROM shops")
+    print("DB CONTENT:", cursor.fetchall())
+
+    cursor.execute("SELECT shop_id FROM shops WHERE api_key=?", (api_key.strip(),))
+    result = cursor.fetchone()
+
+    print("RESULT:", result)
 
     if not result:
         raise HTTPException(status_code=401, detail="Invalid API Key")
