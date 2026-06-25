@@ -15,7 +15,10 @@ app = FastAPI()
 shops = {}
 
 # DB
-conn = sqlite3.connect("saas.db", check_same_thread=False)
+import os
+
+DB_PATH = os.path.join(os.getcwd(), "saas.db")
+conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 cursor = conn.cursor()
 
 cursor.execute("""
