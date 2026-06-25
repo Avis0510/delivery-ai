@@ -5,7 +5,10 @@ import uuid
 import joblib
 import numpy as np
 
-model = joblib.load("model.pkl")
+import os
+
+MODEL_PATH = os.path.join(os.path.dirname(_file_), "model.pkl")
+model = joblib.load(MODEL_PATH)
 
 app = FastAPI()
 
